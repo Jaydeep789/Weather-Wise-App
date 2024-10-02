@@ -64,6 +64,8 @@ fun DisplayAppBar(
                 },
                 onSearchClicked = {
                     weatherViewModel.fetchCityWeatherData()
+                    weatherViewModel.searchTextState.value = ""
+                    weatherViewModel.searchAppBarState.value = SearchAppBarState.CLOSED
                 },
                 onCloseClicked = {
                     weatherViewModel.searchAppBarState.value = SearchAppBarState.CLOSED
@@ -182,7 +184,7 @@ fun DefaultAppBar(
     TopAppBar(
         title = {
             Text(
-                text = "City Search",
+                text = "Search",
                 color = MaterialTheme.colorScheme.topAppBarContentColor,
                 fontFamily = russoOneRegular,
                 fontWeight = FontWeight.Normal,

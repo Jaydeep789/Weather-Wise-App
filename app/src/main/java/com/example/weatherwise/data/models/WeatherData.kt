@@ -3,20 +3,33 @@ package com.example.weatherwise.data.models
 import com.google.gson.annotations.SerializedName
 
 data class WeatherData(
+    @SerializedName("base")
     val base: String,
+    @SerializedName("clouds")
     val clouds: Clouds,
+    @SerializedName("cod")
     val cod: Int,
     @SerializedName("coord")
     val coordinates: Coordinates,
+    @SerializedName("dt")
     val dt: Int,
+    @SerializedName("id")
     val id: Int,
+    @SerializedName("main")
     val main: Main,
+    @SerializedName("name")
     val name: String,
+    @SerializedName("sys")
     val sys: Sys,
+    @SerializedName("timezone")
     val timezone: Int,
+    @SerializedName("visibility")
     val visibility: Int,
+    @SerializedName("weather")
     val weather: List<Weather>,
+    @SerializedName("wind")
     val wind: Wind,
+    @SerializedName("rain")
     val rain: Rain
 )
 
@@ -26,42 +39,65 @@ data class Rain(
 )
 
 data class Clouds(
+    @SerializedName("all")
     val all: Int
 )
 
 data class Coordinates(
+    @SerializedName("lat")
     val lat: Double,
+    @SerializedName("lon")
     val lon: Double
 )
 
 data class Main(
-    val feels_like: Double,
-    val grnd_level: Int,
+    @SerializedName("feels_like")
+    val feelsLike: Double,
+    @SerializedName("grnd_level")
+    val groundLevel: Int,
+    @SerializedName("humidity")
     val humidity: Int,
+    @SerializedName("pressure")
     val pressure: Int,
-    val sea_level: Int,
+    @SerializedName("sea_level")
+    val seaLevel: Int,
+    @SerializedName("temp")
     val temp: Double,
-    val temp_max: Double,
-    val temp_min: Double
+    @SerializedName("temp_max")
+    val tempMax: Double,
+    @SerializedName("temp_min")
+    val tempMin: Double
 )
 
 data class Sys(
+    @SerializedName("country")
     val country: String,
+    @SerializedName("id")
     val id: Int,
+    @SerializedName("sunrise")
     val sunrise: Int,
+    @SerializedName("sunset")
     val sunset: Int,
+    @SerializedName("type")
     val type: Int
 )
 
 data class Weather(
+    @SerializedName("description")
     val description: String,
+    @SerializedName("icon")
     val icon: String,
+    @SerializedName("id")
     val id: Int,
+    @SerializedName("main")
     val main: String
 )
 
 data class Wind(
+    @SerializedName("deg")
     val deg: Int,
-    val gust: Int,
+    @SerializedName("gust")
+    val gust: Double,
+    @SerializedName("speed")
     val speed: Double
 )

@@ -23,14 +23,14 @@ object Constants {
         ),
         dt = 1727578503,
         main = Main(
-            feels_like = 277.69,
-            grnd_level = 1010,
+            feelsLike = 277.69,
+            groundLevel = 1010,
             humidity = 83,
             pressure = 1022,
-            sea_level = 1022,
+            seaLevel = 1022,
             temp = 281.42,
-            temp_min = 279.77,
-            temp_max = 283.12
+            tempMin = 279.77,
+            tempMax = 283.12
         ),
         timezone = 7200,
         sys = Sys(
@@ -45,7 +45,7 @@ object Constants {
         visibility = 10000,
         wind = Wind(
             deg = 250,
-            gust = 0,
+            gust = 0.0,
             speed = 7.6
         ),
         weather = listOf(

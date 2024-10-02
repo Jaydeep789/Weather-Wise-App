@@ -16,7 +16,7 @@ val Gray = Color(0xFF8E8989)
 
 val ColorScheme.topAppBarBackgroundColor: Color
     @Composable
-    get() = Purple40
+    get() = Purple50
 
 val ColorScheme.topAppBarContentColor: Color
     @Composable

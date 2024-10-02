@@ -11,9 +11,11 @@ import com.example.weatherwise.data.models.WeatherData
 import com.example.weatherwise.datastore.CityDataStore
 import com.example.weatherwise.utils.DataState
 import com.example.weatherwise.utils.SearchAppBarState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
@@ -34,8 +36,10 @@ class WeatherViewModel @Inject constructor(
 
     fun fetchCityWeatherData() {
         viewModelScope.launch {
+            _weatherData.value = withContext(this.coroutineContext) {
+                weatherRepository.getWeatherData(searchTextState.value)
+            }
             cityDataStore.storeCity(searchTextState.value)
-            _weatherData.value = weatherRepository.getWeatherData(searchTextState.value)
         }
     }
 
@@ -46,7 +50,9 @@ class WeatherViewModel @Inject constructor(
             }
 
             if (storedCityText.isNotBlank()) {
-                _weatherData.value = weatherRepository.getWeatherData(storedCityText)
+                _weatherData.value = withContext(this.coroutineContext) {
+                    weatherRepository.getWeatherData(storedCityText)
+                }
             } else {
                 _weatherData.value = DataState.Empty
             }
@@ -55,7 +61,9 @@ class WeatherViewModel @Inject constructor(
 
     fun getWeatherDataBasedOnCurrentLocation(lat: Double, long: Double) {
         viewModelScope.launch {
-            _weatherData.value = weatherRepository.getWeatherDataByLocation(lat, long)
+            _weatherData.value = withContext(this.coroutineContext) {
+                weatherRepository.getWeatherDataByLocation(lat, long)
+            }
             if (_weatherData.value is DataState.Success){
                 cityDataStore.storeCity((_weatherData.value as DataState.Success<WeatherData>).data.name)
             }

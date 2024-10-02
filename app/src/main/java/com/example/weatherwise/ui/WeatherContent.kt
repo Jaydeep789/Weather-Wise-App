@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
@@ -42,6 +44,7 @@ import com.example.weatherwise.ui.theme.screenContentColor
 import com.example.weatherwise.ui.theme.subTitleContentColor
 import com.example.weatherwise.utils.Constants
 import com.example.weatherwise.utils.DataState
+import com.example.weatherwise.utils.calculateTime
 import com.example.weatherwise.utils.calculateTimeFromTimeStamp
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -73,18 +76,20 @@ fun WeatherContent(
 fun DataScreen(
     weatherData: WeatherData
 ) {
-    val date = calculateTimeFromTimeStamp(weatherData.dt.toLong(),"d MMMM, EEEE")
-    val sunrise = calculateTimeFromTimeStamp(weatherData.dt.toLong(),"h a")
-    val sunset = calculateTimeFromTimeStamp(weatherData.dt.toLong(),"h a")
+    val date = calculateTimeFromTimeStamp()
+    val sunrise = calculateTime(weatherData.sys.sunrise.toLong())
+    val sunset = calculateTime(weatherData.sys.sunset.toLong())
 
     Surface(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.screenBackgroundColor)
                 .padding(16.dp)
+                .verticalScroll(scrollState)
         ) {
             Text(
                 text = weatherData.name,
@@ -104,7 +109,11 @@ fun DataScreen(
                 modifier = Modifier
                     .fillMaxWidth()
             )
-            Row {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Column(
                     modifier = Modifier
                         .size(150.dp),
@@ -112,7 +121,7 @@ fun DataScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "${weatherData.main.temp.toInt()}°F",
+                        text = "${weatherData.main.temp.toInt()}°",
                         fontFamily = russoOneRegular,
                         fontSize = 56.sp,
                         color = MaterialTheme.colorScheme.screenContentColor,
@@ -152,10 +161,10 @@ fun DataScreen(
             Spacer(Modifier.height(24.dp))
             WeatherCardInfo(
                 firstIcon = R.drawable.sea_waves,
-                firstItemData = "${weatherData.main.sea_level} m",
+                firstItemData = "${weatherData.main.seaLevel} m",
                 firstItemText = "Sea Level",
                 secondIcon = R.drawable.ground,
-                secondItemData = "${weatherData.main.grnd_level} m",
+                secondItemData = "${weatherData.main.groundLevel} m",
                 secondItemText = "Grnd level",
                 thirdIcon = R.drawable.atmospheric_pressure_48,
                 thirdItemData = "${weatherData.main.pressure} lb",
@@ -164,7 +173,7 @@ fun DataScreen(
             Spacer(Modifier.height(24.dp))
             WeatherCardInfo(
                 firstIcon = R.drawable.feels_like,
-                firstItemData = "${weatherData.main.feels_like.toInt()}°F",
+                firstItemData = "${weatherData.main.feelsLike.toInt()}°F",
                 firstItemText = "Feels Like",
                 secondIcon = R.drawable.sunrise_48,
                 secondItemData = sunrise,
@@ -173,6 +182,7 @@ fun DataScreen(
                 thirdItemData = sunset,
                 thirdItemText = "Sunset"
             )
+            Spacer(Modifier.height(8.dp))
         }
     }
 }
@@ -201,20 +211,19 @@ fun WeatherCardInfo(
         )
     ) {
         Row(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
         ) {
             CardInfo(
                 icon = firstIcon,
                 itemData = firstItemData,
                 itemText = firstItemText
             )
-            Spacer(modifier = Modifier.width(20.dp))
             CardInfo(
                 icon = secondIcon,
                 itemData = secondItemData,
                 itemText = secondItemText
             )
-            Spacer(modifier = Modifier.width(20.dp))
             CardInfo(
                 icon = thirdIcon,
                 itemData = thirdItemData,

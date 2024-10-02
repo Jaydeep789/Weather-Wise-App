@@ -2,8 +2,11 @@ package com.example.weatherwise.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.format.DateTimeFormatter
+import java.time.ZoneId
+import java.util.Date
+import java.util.Locale
 
 sealed class DataState<out T>{
     data class Success<T>(val data: T): DataState<T>()
@@ -27,8 +30,21 @@ enum class TrailingIconState {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun calculateTimeFromTimeStamp(timeInSeconds: Long, pattern: String): String {
-    val stamp = Instant.ofEpochSecond(timeInSeconds)
-    val formatter = DateTimeFormatter.ofPattern(pattern)
-    return formatter.format(stamp)
+fun calculateTimeFromTimeStamp(): String {
+    val instant = Instant.now()
+    val localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
+    val sb = StringBuilder()
+        .append(localDate.dayOfMonth.toString())
+        .append(" ")
+        .append(localDate.month.toString())
+        .append(", ")
+        .append(localDate.dayOfWeek.toString())
+    return sb.toString()
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun calculateTime(timeInSeconds: Long): String {
+    val date = Date(timeInSeconds)
+    val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return format.format(date)
 }

@@ -14,7 +14,7 @@ class WeatherRepository @Inject constructor(
             val dataResponse = weatherApi.fetchWeatherDataByCityName(city = city)
 
             val result = dataResponse.body()!!
-            if (dataResponse.isSuccessful){
+            if (dataResponse.isSuccessful && result.cod >= 200 && result.cod <= 300){
                 DataState.Success(result)
             } else {
                 DataState.Error(Exception())
@@ -30,7 +30,7 @@ class WeatherRepository @Inject constructor(
             val responseData = weatherApi.fetchWeatherDataByCurrentLocation(lat = lat, lon = lon)
 
             val result = responseData.body()!!
-            if (responseData.isSuccessful){
+            if (responseData.isSuccessful && result.cod >= 200 && result.cod <= 300){
                 DataState.Success(result)
             } else {
                 DataState.Error(Exception())
