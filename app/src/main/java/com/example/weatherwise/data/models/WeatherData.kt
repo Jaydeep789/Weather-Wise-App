@@ -16,7 +16,13 @@ data class WeatherData(
     val timezone: Int,
     val visibility: Int,
     val weather: List<Weather>,
-    val wind: Wind
+    val wind: Wind,
+    val rain: Rain
+)
+
+data class Rain(
+    @SerializedName("1h")
+    val hour: Double
 )
 
 data class Clouds(

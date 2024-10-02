@@ -18,8 +18,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository,
-    private val cityDataStore: CityDataStore
-): ViewModel() {
+    private val cityDataStore: CityDataStore,
+) : ViewModel() {
 
     var searchTextState: MutableState<String> = mutableStateOf("")
 
@@ -33,52 +33,36 @@ class WeatherViewModel @Inject constructor(
     private lateinit var storedCityText: String
 
     fun fetchCityWeatherData() {
-        try {
-            viewModelScope.launch {
-                cityDataStore.storeCity(searchTextState.value)
-                weatherRepository.getWeatherData(searchTextState.value).collect { data ->
-                    _weatherData.value = DataState.Success(data)
-                }
-            }
-        } catch (e: Exception) {
-            _weatherData.value = DataState.Error(e)
+        viewModelScope.launch {
+            cityDataStore.storeCity(searchTextState.value)
+            _weatherData.value = weatherRepository.getWeatherData(searchTextState.value)
         }
     }
 
-    fun fetchExistingCityWeatherData(){
-         try {
-             viewModelScope.launch {
-                 cityDataStore.getCity.collect { city ->
-                     storedCityText = city
-                 }
-
-                 if (storedCityText.isNotBlank()){
-                     weatherRepository.getWeatherData(storedCityText).collect { data ->
-                         _weatherData.value = DataState.Success(data)
-                     }
-                 } else {
-                     _weatherData.value = DataState.Empty
-                 }
-             }
-         } catch (e: Exception){
-             _weatherData.value = DataState.Error(e)
-         }
-    }
-
-    fun getWeatherDataBasedOnCurrentLocation(lat: Double, long: Double){
-        try {
-            viewModelScope.launch {
-                weatherRepository.getWeatherDataByLocation(lat, long).collect { data ->
-                    _weatherData.value = DataState.Success(data)
-                    cityDataStore.storeCity(data.name)
-                }
+    fun fetchExistingCityWeatherData() {
+        viewModelScope.launch {
+            cityDataStore.getCity.collect { city ->
+                storedCityText = city
             }
-        } catch (e: Exception) {
-            _weatherData.value = DataState.Error(e)
+
+            if (storedCityText.isNotBlank()) {
+                _weatherData.value = weatherRepository.getWeatherData(storedCityText)
+            } else {
+                _weatherData.value = DataState.Empty
+            }
         }
     }
 
-    fun unableToAccessLocationData(e: Exception){
+    fun getWeatherDataBasedOnCurrentLocation(lat: Double, long: Double) {
+        viewModelScope.launch {
+            _weatherData.value = weatherRepository.getWeatherDataByLocation(lat, long)
+            if (_weatherData.value is DataState.Success){
+                cityDataStore.storeCity((_weatherData.value as DataState.Success<WeatherData>).data.name)
+            }
+        }
+    }
+
+    fun unableToAccessLocationData(e: Exception) {
         _weatherData.value = DataState.Error(e)
     }
 }

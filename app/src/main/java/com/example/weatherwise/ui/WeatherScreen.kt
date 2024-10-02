@@ -1,5 +1,7 @@
 package com.example.weatherwise.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -9,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.weatherwise.WeatherViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeatherScreen(
     weatherViewModel: WeatherViewModel
@@ -32,7 +35,7 @@ fun WeatherScreen(
                 modifier = Modifier.padding(paddingValues)
             ) {
                 WeatherContent(
-                    weatherData = weatherData
+                    weatherData = weatherData,
                 )
             }
         }

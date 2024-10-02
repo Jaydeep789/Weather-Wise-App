@@ -2,20 +2,41 @@ package com.example.weatherwise.repository
 
 import com.example.weatherwise.data.models.WeatherData
 import com.example.weatherwise.network.WeatherApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.weatherwise.utils.DataState
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
     private val weatherApi: WeatherApi
 ) {
 
-    fun getWeatherData(city: String): Flow<WeatherData> {
-        return weatherApi.fetchWeatherDataByCityName(city = city)
+    suspend fun getWeatherData(city: String): DataState<WeatherData> {
+        return try {
+            val dataResponse = weatherApi.fetchWeatherDataByCityName(city = city)
+
+            val result = dataResponse.body()!!
+            if (dataResponse.isSuccessful){
+                DataState.Success(result)
+            } else {
+                DataState.Error(Exception())
+            }
+        }
+        catch (e: Exception){
+            DataState.Error(e)
+        }
     }
 
-    fun getWeatherDataByLocation(lat: Double, lon: Double): Flow<WeatherData> {
-        return weatherApi.fetchWeatherDataByCurrentLocation(lat = lat, lon = lon)
+    suspend fun getWeatherDataByLocation(lat: Double, lon: Double): DataState<WeatherData> {
+        return try {
+            val responseData = weatherApi.fetchWeatherDataByCurrentLocation(lat = lat, lon = lon)
+
+            val result = responseData.body()!!
+            if (responseData.isSuccessful){
+                DataState.Success(result)
+            } else {
+                DataState.Error(Exception())
+            }
+        } catch (e: Exception){
+            DataState.Error(e)
+        }
     }
 }
