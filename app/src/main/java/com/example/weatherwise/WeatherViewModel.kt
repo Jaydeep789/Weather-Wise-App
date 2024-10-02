@@ -11,7 +11,6 @@ import com.example.weatherwise.data.models.WeatherData
 import com.example.weatherwise.datastore.CityDataStore
 import com.example.weatherwise.utils.DataState
 import com.example.weatherwise.utils.SearchAppBarState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
