@@ -1,13 +1,17 @@
 package com.example.weatherwise.repository
 
 import com.example.weatherwise.data.models.WeatherData
+import com.example.weatherwise.datastore.CityDataStore
 import com.example.weatherwise.network.WeatherApi
 import com.example.weatherwise.utils.DataState
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
-    private val weatherApi: WeatherApi
+    private val weatherApi: WeatherApi,
+    private val cityDataStore: CityDataStore
 ) {
+
+    var cityText: String = ""
 
     suspend fun getWeatherData(city: String): DataState<WeatherData> {
         return try {
@@ -37,6 +41,12 @@ class WeatherRepository @Inject constructor(
             }
         } catch (e: Exception){
             DataState.Error(e)
+        }
+    }
+
+    suspend fun getStoredCity(){
+        cityDataStore.getCity.collect { city ->
+            cityText = city
         }
     }
 }

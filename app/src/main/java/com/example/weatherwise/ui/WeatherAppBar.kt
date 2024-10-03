@@ -64,7 +64,6 @@ fun DisplayAppBar(
                 },
                 onSearchClicked = {
                     weatherViewModel.fetchCityWeatherData()
-                    weatherViewModel.searchTextState.value = ""
                     weatherViewModel.searchAppBarState.value = SearchAppBarState.CLOSED
                 },
                 onCloseClicked = {

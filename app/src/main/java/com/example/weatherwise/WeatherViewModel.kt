@@ -31,27 +31,24 @@ class WeatherViewModel @Inject constructor(
     val weatherData: StateFlow<DataState<WeatherData>>
         get() = _weatherData
 
-    private lateinit var storedCityText: String
+    init {
+        viewModelScope.launch {
+            weatherRepository.getStoredCity()
+        }
+    }
 
     fun fetchCityWeatherData() {
         viewModelScope.launch {
-            _weatherData.value = withContext(this.coroutineContext) {
-                weatherRepository.getWeatherData(searchTextState.value)
-            }
             cityDataStore.storeCity(searchTextState.value)
+            _weatherData.value = weatherRepository.getWeatherData(searchTextState.value)
         }
     }
 
     fun fetchExistingCityWeatherData() {
         viewModelScope.launch {
-            cityDataStore.getCity.collect { city ->
-                storedCityText = city
-            }
 
-            if (storedCityText.isNotBlank()) {
-                _weatherData.value = withContext(this.coroutineContext) {
-                    weatherRepository.getWeatherData(storedCityText)
-                }
+            if (weatherRepository.cityText.isNotBlank()){
+                _weatherData.value = weatherRepository.getWeatherData(weatherRepository.cityText)
             } else {
                 _weatherData.value = DataState.Empty
             }
